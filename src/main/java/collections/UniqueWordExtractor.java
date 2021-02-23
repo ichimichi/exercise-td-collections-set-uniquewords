@@ -23,7 +23,6 @@ public class UniqueWordExtractor {
                     }
                     defaultSet.add(word);
                 }
-                System.out.println(defaultSet);
                 return defaultSet;
             }
             case SortOrder.ALPHABETIC_ASCENDING: {
@@ -35,18 +34,28 @@ public class UniqueWordExtractor {
                     }
                     alphaSet.add(word);
                 }
-                System.out.println(alphaSet);
                 return alphaSet;
             }
             case SortOrder.ALPHABETIC_DESCENDING: {
-                TreeSet<String> alphaDescSet = (TreeSet<String>) new UniqueWordExtractor().fetchUniqueWordsInOrder(input, SortOrder.ALPHABETIC_ASCENDING);
-                return alphaDescSet.descendingSet();
+                TreeSet<String> alphaSet = (TreeSet<String>) new UniqueWordExtractor().fetchUniqueWordsInOrder(input, SortOrder.ALPHABETIC_ASCENDING);
+                return alphaSet.descendingSet();
             }
             case SortOrder.LENGTH_THEN_ALPHABETIC_ASCENDING: {
-                return null;
+                LinkedHashSet<String> defaultSet = (LinkedHashSet<String>) new UniqueWordExtractor().fetchUniqueWordsInOrder(input, SortOrder.INPUT_ORDER);
+                ArrayList<String> wordList = new ArrayList<>(defaultSet);
+
+                Comparator<String> lengthComparator = (String o1, String o2)-> (int) o1.length()-o2.length();
+                Comparator<String> alphaComparator = (String o1, String o2)-> (int) o1.compareTo(o2);
+
+                TreeSet<String> sortedSet = new TreeSet<>(lengthComparator.thenComparing(alphaComparator));
+                sortedSet.addAll(wordList);
+
+                return sortedSet;
             }
 
         }
+
+
         return null;
     }
 
